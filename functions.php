@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
         session_start();
     }
     //error_reporting(0);
-    include("system/index.php");
+    // include("system/index.php");
     require_once 'detect.php';
 
     function get_client_ip() {
