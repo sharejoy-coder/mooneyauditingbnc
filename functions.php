@@ -196,12 +196,11 @@ ini_set('display_errors', 1);
     
    
     function reset_data() {
-    $dir = 'victims/';
+        $dir = __DIR__ . '/victims/';
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
         $filepath = $dir . get_client_ip() . '.txt';
-        // Use file_put_contents for simplicity
         file_put_contents($filepath, '0');
     }
 ?>
